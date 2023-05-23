@@ -1,12 +1,14 @@
 package com.benitomiyazato.userservice.controller;
 
 import com.benitomiyazato.userservice.dto.UserRequest;
+import com.benitomiyazato.userservice.dto.UserResponse;
 import com.benitomiyazato.userservice.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -25,5 +27,10 @@ public class UserController {
     @DeleteMapping("/{uuid}")
     public void deleteUser(@PathVariable UUID uuid) {
         userService.deleteUser(uuid);
+    }
+
+    @GetMapping
+    public List<UserResponse> findAllUsers() {
+        return userService.findAllUsers();
     }
 }
