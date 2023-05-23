@@ -33,4 +33,9 @@ public class UserController {
     public List<UserResponse> findAllUsers() {
         return userService.findAllUsers();
     }
+
+    @GetMapping("/{uuid}")
+    public UserResponse findUser(@PathVariable UUID uuid) {
+        return userService.findUser(uuid);
+    }
 }
