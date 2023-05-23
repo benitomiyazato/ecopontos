@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.domain.Persistable;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -24,21 +23,22 @@ public class UserModel {
     @GeneratedValue
     private UUID userId;
 
-    @Email(message = "Invalid Email")
-    @NotBlank(message = "Email cannot be empty")
+    @Column(unique = true)
     private String email;
 
-    @NotBlank(message = "Full Name is required")
     private String fullName;
 
-    @NotBlank(message = "Cpf is required")
+    @Column(unique = true)
     private String cpf;
 
-    @NotBlank(message = "Phone number is required")
+    @Column(unique = true)
     private String phone;
 
     private String address;
+
     private String cep;
+
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
 }
