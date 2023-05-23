@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -24,5 +25,9 @@ public class UserService {
         BeanUtils.copyProperties(userRequest, userToSave);
         userToSave.setCreatedAt(LocalDateTime.now());
         userRepository.save(userToSave);
+    }
+
+    public void deleteUser(UUID uuid) {
+        userRepository.deleteById(uuid);
     }
 }
