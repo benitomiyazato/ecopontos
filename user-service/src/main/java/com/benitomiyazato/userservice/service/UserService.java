@@ -4,13 +4,13 @@ import com.benitomiyazato.userservice.dto.UserRequest;
 import com.benitomiyazato.userservice.dto.UserResponse;
 import com.benitomiyazato.userservice.model.UserModel;
 import com.benitomiyazato.userservice.repository.UserRepository;
+import com.benitomiyazato.userservice.utils.CopyPropertiesNotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -60,6 +60,23 @@ public class UserService {
                 .phone(userModel.getPhone())
                 .address(userModel.getAddress())
                 .cep(userModel.getCep())
+                .build();
+    }
+
+    public UserResponse updateUser(UUID uuid, UserRequest userRequest) {
+        UserModel userToUpdate = userRepository.findById(uuid).orElseThrow(() -> new IllegalArgumentException("Id inválido"));
+
+        CopyPropertiesNotNull.copyProperties(userRequest, userToUpdate);
+        UserModel updatedUser = userRepository.save(userToUpdate);
+
+        return UserResponse.builder()
+                .userId(updatedUser.getUserId())
+                .email(updatedUser.getEmail())
+                .fullName(updatedUser.getFullName())
+                .cpf(updatedUser.getCpf())
+                .phone(updatedUser.getPhone())
+                .address(updatedUser.getAddress())
+                .cep(updatedUser.getCep())
                 .build();
     }
 }

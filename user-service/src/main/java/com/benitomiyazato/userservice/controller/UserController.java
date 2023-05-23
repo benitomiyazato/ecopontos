@@ -29,6 +29,11 @@ public class UserController {
         userService.deleteUser(uuid);
     }
 
+    @PutMapping("/{uuid}")
+    public UserResponse updateUser(@PathVariable UUID uuid, @RequestBody UserRequest userRequest) {
+        return userService.updateUser(uuid, userRequest);
+    }
+
     @GetMapping
     public List<UserResponse> findAllUsers() {
         return userService.findAllUsers();
