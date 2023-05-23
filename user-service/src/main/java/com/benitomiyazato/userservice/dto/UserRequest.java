@@ -21,7 +21,7 @@ public class UserRequest {
 
     @NotBlank(message = "Phone number is required")
     private String phone;
-    
+
     private String address;
     private String cep;
     private LocalDateTime createdAt;

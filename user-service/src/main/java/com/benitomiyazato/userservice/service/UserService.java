@@ -16,6 +16,10 @@ public class UserService {
     private final UserRepository userRepository;
 
     public void saveUser(UserRequest userRequest) {
+        if (userRepository.findByPhoneOrEmailOrCpf(userRequest.getPhone(), userRequest.getEmail(), userRequest.getCpf()).isPresent()) {
+            // TODO: throw exception
+            throw new IllegalArgumentException("TUDO ERRADO");
+        }
         UserModel userToSave = new UserModel();
         BeanUtils.copyProperties(userRequest, userToSave);
         userToSave.setCreatedAt(LocalDateTime.now());
