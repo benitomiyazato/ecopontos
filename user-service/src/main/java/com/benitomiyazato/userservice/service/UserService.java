@@ -5,7 +5,10 @@ import com.benitomiyazato.userservice.dto.UserResponse;
 import com.benitomiyazato.userservice.model.UserModel;
 import com.benitomiyazato.userservice.repository.UserRepository;
 import com.benitomiyazato.userservice.utils.CopyPropertiesNotNull;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +21,11 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+    Logger logger = LogManager.getLogger(UserService.class);
 
+    @Transactional
     public void saveUser(UserRequest userRequest) {
+
         if (userRepository.findByPhoneOrEmailOrCpf(userRequest.getPhone(), userRequest.getEmail(), userRequest.getCpf()).isPresent()) {
             // TODO: throw exception
             throw new IllegalArgumentException("TUDO ERRADO");
@@ -30,7 +36,9 @@ public class UserService {
         userRepository.save(userToSave);
     }
 
+    @Transactional
     public void deleteUser(UUID uuid) {
+        logger.info("Hit Delete User Endpoint");
         userRepository.deleteById(uuid);
     }
 
@@ -63,6 +71,7 @@ public class UserService {
                 .build();
     }
 
+    @Transactional
     public UserResponse updateUser(UUID uuid, UserRequest userRequest) {
         UserModel userToUpdate = userRepository.findById(uuid).orElseThrow(() -> new IllegalArgumentException("Id inválido"));
 
