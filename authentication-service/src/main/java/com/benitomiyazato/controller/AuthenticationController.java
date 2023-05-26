@@ -2,6 +2,7 @@ package com.benitomiyazato.controller;
 
 import com.benitomiyazato.dto.AuthenticationRequest;
 import com.benitomiyazato.dto.AuthenticationResponse;
+import com.benitomiyazato.dto.UserResponse;
 import com.benitomiyazato.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,15 @@ public class AuthenticationController {
 
     public AuthenticationResponse login(@RequestBody @Valid AuthenticationRequest authenticationRequest) {
         // TODO: fetch user data from user service
-        //  throw exception if email not found
-        //  check for email and password
-        //  generate JWT
+        UserResponse userResponse = webClient.build().get()
+                .uri("http://user-service/api/users/" + authenticationRequest.getEmail())
+                .retrieve()
+                .bodyToMono(UserResponse.class).block();
+
+
+
+        //  TODO: check for email and password
+        //      generate JWT
         return null; // return JWT
     }
 

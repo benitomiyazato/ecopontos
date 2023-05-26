@@ -76,6 +76,21 @@ public class UserService {
                 .build();
     }
 
+    public UserResponse findUser(String email) {
+        // TODO: exception handling
+        UserModel userModel = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("E-mail inválido"));
+
+        return UserResponse.builder()
+                .userId(userModel.getUserId())
+                .email(userModel.getEmail())
+                .fullName(userModel.getFullName())
+                .cpf(userModel.getCpf())
+                .phone(userModel.getPhone())
+                .address(userModel.getAddress())
+                .cep(userModel.getCep())
+                .build();
+    }
+
     @Transactional
     public UserResponse updateUser(UUID uuid, UserRequest userRequest) {
         UserModel userToUpdate = userRepository.findById(uuid).orElseThrow(() -> new IllegalArgumentException("Id inválido"));

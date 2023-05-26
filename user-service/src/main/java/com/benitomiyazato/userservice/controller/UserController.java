@@ -47,9 +47,15 @@ public class UserController {
         return userService.findAllUsers();
     }
 
-    @GetMapping("/{uuid}")
-    public UserResponse findUser(@PathVariable UUID uuid) {
+    @GetMapping("/byId/{uuid}")
+    public UserResponse findUserById(@PathVariable UUID uuid) {
         logger.info("Hit Find User with ID = {}", uuid);
         return userService.findUser(uuid);
+    }
+
+    @GetMapping("/byEmail/{email}")
+    public UserResponse findUserByEmail(@PathVariable String email) {
+        logger.info("Hit Find User with email = {}", email);
+        return userService.findUser(email);
     }
 }
