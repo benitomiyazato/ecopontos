@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     Logger logger = LogManager.getLogger(UserService.class);
 
     @Transactional
@@ -33,6 +35,7 @@ public class UserService {
         UserModel userToSave = new UserModel();
         BeanUtils.copyProperties(userRequest, userToSave);
         userToSave.setCreatedAt(LocalDateTime.now());
+        userToSave.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         userRepository.save(userToSave);
     }
 

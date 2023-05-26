@@ -22,7 +22,7 @@ public class UserController {
 
     Logger logger = LogManager.getLogger(UserController.class);
 
-    @PostMapping
+    @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public void saveUser(@RequestBody @Valid UserRequest userRequest) {
         logger.info("Hit Save user Endpoint");
@@ -35,7 +35,7 @@ public class UserController {
         userService.deleteUser(uuid);
     }
 
-    @PutMapping("/{uuid}")
+    @PutMapping("/update/{uuid}")
     public UserResponse updateUser(@PathVariable UUID uuid, @RequestBody UserRequest userRequest) {
         logger.info("Hit Delete User with ID = {}", uuid);
         return userService.updateUser(uuid, userRequest);

@@ -1,4 +1,4 @@
-package com.benitomiyazato.userservice.dto;
+package com.benitomiyazato.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -7,14 +7,11 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class UserRequest {
+public class CredentialsRequest {
 
     @Email(message = "Invalid Email")
     @NotBlank(message = "Email cannot be empty")
     private String email;
-
-    @NotBlank(message = "Password is required")
-    private String password;
 
     @NotBlank(message = "Full Name is required")
     private String fullName;
