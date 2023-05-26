@@ -2,6 +2,7 @@ package com.benitomiyazato.userservice.service;
 
 import com.benitomiyazato.userservice.dto.UserRequest;
 import com.benitomiyazato.userservice.dto.UserResponse;
+import com.benitomiyazato.userservice.enums.Role;
 import com.benitomiyazato.userservice.model.UserModel;
 import com.benitomiyazato.userservice.repository.UserRepository;
 import com.benitomiyazato.userservice.utils.CopyPropertiesNotNull;
@@ -36,6 +37,7 @@ public class UserService {
         BeanUtils.copyProperties(userRequest, userToSave);
         userToSave.setCreatedAt(LocalDateTime.now());
         userToSave.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        userToSave.setRole(Role.USER);
         userRepository.save(userToSave);
     }
 
