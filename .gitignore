@@ -12,6 +12,7 @@ classes/
 
 .yml
 .properties
+.pem
 
 # Log files
 jxl.log
