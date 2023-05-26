@@ -5,6 +5,7 @@ import com.benitomiyazato.dto.AuthenticationResponse;
 import com.benitomiyazato.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,12 @@ public class AuthenticationController {
     }
 
     // TODO: public void validateToken( get token from Authorization Header ) {
-    //  return status code = 200 if valid, if not 403 (forbidenn)
+    //  return status code = 200 if valid, if not 403 (forbidden)
     //  }
+
+    @GetMapping
+    public String test() {
+        return "working";
+    }
+
 }
