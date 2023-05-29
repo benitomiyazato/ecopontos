@@ -1,21 +1,33 @@
+logging:
+  level:
+    org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider: DEBUG
+
 server:
   port: 8081
+
 
 spring:
   application:
     name: api-gateway
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: false
       routes:
         - id: authentication-service
           uri: lb://authentication-service
           predicates:
             - Path=/api/auth/**
+          filter:
+            - Authentication
 
         - id: user-service
           uri: lb://user-service
           predicates:
             - Path=/api/users/**
+          filter:
+            - Authentication
 
         - id: discovery-service
           uri: http://localhost:8761
@@ -23,11 +35,14 @@ spring:
             - Path=/eureka
           filters:
             - SetPath=/
+            - Authentication
 
         - id: discovery-service-static
           uri: http://localhost:8761
           predicates:
             - Path=/eureka/**
+          filters:
+            - Authentication
 
 eureka:
   client:
