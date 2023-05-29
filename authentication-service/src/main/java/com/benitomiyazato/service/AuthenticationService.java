@@ -4,6 +4,7 @@ import com.benitomiyazato.dto.AuthenticationRequest;
 import com.benitomiyazato.dto.AuthenticationResponse;
 import com.benitomiyazato.dto.UserAuthResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -15,6 +16,9 @@ public class AuthenticationService {
     private final WebClient.Builder webClient;
     private final PasswordEncoder encoder;
     private final JwtService jwtService;
+
+    @Value("${jwt.expirationTimeInHours}")
+    private int expirationTimeInHours;
 
 
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest) {
@@ -30,6 +34,6 @@ public class AuthenticationService {
         if(!encoder.matches(authenticationRequest.getPassword(), userAuthResponse.getEncodedPassword()))
             throw new IllegalArgumentException("senha errada");
 
-        return new AuthenticationResponse(userAuthResponse.getUsername() + userAuthResponse.getPassword() + userAuthResponse.getAuthorities());
+        return new AuthenticationResponse(jwtService.generateToken(userAuthResponse, expirationTimeInHours));
     }
 }
