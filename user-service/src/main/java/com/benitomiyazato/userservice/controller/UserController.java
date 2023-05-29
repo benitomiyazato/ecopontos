@@ -1,17 +1,19 @@
 package com.benitomiyazato.userservice.controller;
 
+import com.benitomiyazato.userservice.dto.UserAuthResponse;
 import com.benitomiyazato.userservice.dto.UserRequest;
 import com.benitomiyazato.userservice.dto.UserResponse;
 import com.benitomiyazato.userservice.service.UserService;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 @RestController
 @RequiredArgsConstructor
@@ -47,15 +49,14 @@ public class UserController {
         return userService.findAllUsers();
     }
 
-    @GetMapping("/byId/{uuid}")
+    @GetMapping("/{uuid}")
     public UserResponse findUserById(@PathVariable UUID uuid) {
         logger.info("Hit Find User with ID = {}", uuid);
         return userService.findUser(uuid);
     }
 
-    @GetMapping("/byEmail/{email}")
-    public UserResponse findUserByEmail(@PathVariable String email) {
-        logger.info("Hit Find User with email = {}", email);
-        return userService.findUser(email);
+    @GetMapping("/auth/{email}")
+    public UserAuthResponse findUserAuth(@PathVariable String email) {
+        return userService.findUserAuth(email);
     }
 }

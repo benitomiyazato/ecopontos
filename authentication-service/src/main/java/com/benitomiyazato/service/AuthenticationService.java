@@ -1,8 +1,10 @@
 package com.benitomiyazato.service;
 
 import com.benitomiyazato.dto.AuthenticationRequest;
-import com.benitomiyazato.dto.UserResponse;
+import com.benitomiyazato.dto.AuthenticationResponse;
+import com.benitomiyazato.dto.UserAuthResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -11,23 +13,19 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class AuthenticationService {
 
     private final WebClient.Builder webClient;
+    private final PasswordEncoder encoder;
 
 
-    public String login(AuthenticationRequest authenticationRequest) {
+    public AuthenticationResponse login(AuthenticationRequest authenticationRequest) {
         // TODO: fetch user data from user service
-        UserResponse userResponse = webClient.build().get()
-                .uri("http://user-service/api/users/byEmail/" + authenticationRequest.getEmail())
+        UserAuthResponse userAuthResponse = webClient.build().get()
+                .uri("http://user-service/api/users/auth/" + authenticationRequest.getEmail())
                 .retrieve()
-                .bodyToMono(UserResponse.class).block();
+                .bodyToMono(UserAuthResponse.class).block();
 
-        if (userResponse == null)
+        if (userAuthResponse == null || encoder.matches(authenticationRequest.getPassword(), userAuthResponse.getEncodedPassword()))
             throw new IllegalArgumentException("CAPIM NA PALHETA");
 
-
-
-        //  TODO: check for email and password
-        //      generate JWT
-//        return null; // return JWT
-        return userResponse.getFullName();
+        return new AuthenticationResponse("somewhere between psychotic and iconic");
     }
 }

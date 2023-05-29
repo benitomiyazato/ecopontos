@@ -1,4 +1,4 @@
-package com.benitomiyazato.dto;
+package com.benitomiyazato.userservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,13 +11,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponse {
-
-    private UUID userId;
+public class UserAuthResponse {
     private String email;
-    private String fullName;
-    private String cpf;
-    private String phone;
-    private String address;
-    private String cep;
+    private String encodedPassword;
 }

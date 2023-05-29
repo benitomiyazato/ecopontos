@@ -2,12 +2,10 @@ package com.benitomiyazato.controller;
 
 import com.benitomiyazato.dto.AuthenticationRequest;
 import com.benitomiyazato.dto.AuthenticationResponse;
-import com.benitomiyazato.dto.UserResponse;
 import com.benitomiyazato.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,7 +16,7 @@ public class AuthenticationController {
 
 
     @PostMapping("/login")
-    public String login(@RequestBody @Valid AuthenticationRequest authenticationRequest) {
+    public AuthenticationResponse login(@RequestBody @Valid AuthenticationRequest authenticationRequest) {
         return authenticationService.login(authenticationRequest);
     }
 
