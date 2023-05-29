@@ -102,6 +102,7 @@ public class UserService {
         return UserAuthResponse.builder()
                 .email(userModel.getEmail())
                 .encodedPassword(userModel.getPassword())
+                .role(userModel.getRole())
                 .build();
     }
 }

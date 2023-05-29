@@ -9,3 +9,6 @@ eureka:
 
 server:
 port: 0
+rsa:
+  public-key: classpath:certs/public.pem
+  private-key: classpath:certs/private.pem

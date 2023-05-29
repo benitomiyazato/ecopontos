@@ -14,6 +14,7 @@ public class AuthenticationService {
 
     private final WebClient.Builder webClient;
     private final PasswordEncoder encoder;
+    private final JwtService jwtService;
 
 
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest) {
@@ -23,9 +24,12 @@ public class AuthenticationService {
                 .retrieve()
                 .bodyToMono(UserAuthResponse.class).block();
 
-        if (userAuthResponse == null || encoder.matches(authenticationRequest.getPassword(), userAuthResponse.getEncodedPassword()))
-            throw new IllegalArgumentException("CAPIM NA PALHETA");
+        if (userAuthResponse == null)
+            throw new IllegalArgumentException("userAuthResponse null");
 
-        return new AuthenticationResponse("somewhere between psychotic and iconic");
+        if(!encoder.matches(authenticationRequest.getPassword(), userAuthResponse.getEncodedPassword()))
+            throw new IllegalArgumentException("senha errada");
+
+        return new AuthenticationResponse(userAuthResponse.getUsername() + userAuthResponse.getPassword() + userAuthResponse.getAuthorities());
     }
 }
