@@ -36,4 +36,8 @@ public class AuthenticationService {
 
         return new AuthenticationResponse(jwtService.generateToken(userAuthResponse, expirationTimeInHours));
     }
+
+    public String validate(String token) {
+        return jwtService.validate(token);
+    }
 }

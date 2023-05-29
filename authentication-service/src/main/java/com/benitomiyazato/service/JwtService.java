@@ -1,11 +1,10 @@
 package com.benitomiyazato.service;
 
+import com.benitomiyazato.config.RsaKeyProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -17,6 +16,7 @@ import java.util.stream.Collectors;
 public class JwtService {
 
     private final JwtEncoder jwtEncoder;
+    private final RsaKeyProperties rsaKeys;
 
     public String generateToken(UserDetails user, int expirationTimeInHours) {
         Instant now = Instant.now();
@@ -33,5 +33,10 @@ public class JwtService {
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+    }
+
+    public String validate(String token) {
+        NimbusJwtDecoder build = NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
+        return build.decode(token).getSubject();
     }
 }
