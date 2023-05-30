@@ -29,9 +29,9 @@ public class UserService {
 
     @Transactional
     public void saveUser(UserRequest userRequest) {
-
+        logger.info("Transaction Started for user saving");
         if (userRepository.findByPhoneOrEmailOrCpf(userRequest.getPhone(), userRequest.getEmail(), userRequest.getCpf()).isPresent()) {
-            // TODO: throw exception
+            logger.error("Duplicate phone, email or cpf");
             throw new IllegalArgumentException("TUDO ERRADO");
         }
         UserModel userToSave = new UserModel();
@@ -40,15 +40,17 @@ public class UserService {
         userToSave.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         userToSave.setRole(Role.USER);
         userRepository.save(userToSave);
+        logger.info("User saved with email: {}", userToSave.getEmail());
     }
 
     @Transactional
     public void deleteUser(UUID uuid) {
-        logger.info("Hit Delete User Endpoint");
+        logger.info("Transaction Started for user deletion");
         userRepository.deleteById(uuid);
     }
 
     public List<UserResponse> findAllUsers() {
+        logger.info("Querying for all users");
         List<UserModel> userModelList = userRepository.findAll();
         return userModelList.stream().map(userModel -> UserResponse
                 .builder()
@@ -63,7 +65,7 @@ public class UserService {
     }
 
     public UserResponse findUser(UUID uuid) {
-        // TODO: exception handling
+        logger.info("Searching user with UUID: {}", uuid);
         UserModel userModel = userRepository.findById(uuid).orElseThrow(() -> new IllegalArgumentException("Id inválido"));
 
         return UserResponse.builder()
@@ -79,11 +81,15 @@ public class UserService {
 
     @Transactional
     public UserResponse updateUser(UUID uuid, UserRequest userRequest) {
+        logger.info("Transaction started for user updating");
+        logger.info("Searching user with UUID: {}", uuid);
         UserModel userToUpdate = userRepository.findById(uuid).orElseThrow(() -> new IllegalArgumentException("Id inválido"));
 
+        logger.info("Copying new properties to user object");
         CopyPropertiesNotNull.copyProperties(userRequest, userToUpdate);
         UserModel updatedUser = userRepository.save(userToUpdate);
 
+        logger.info("User with UUID: {} updated successfuly", updatedUser.getEmail());
         return UserResponse.builder()
                 .userId(updatedUser.getUserId())
                 .email(updatedUser.getEmail())
@@ -96,9 +102,9 @@ public class UserService {
     }
 
     public UserAuthResponse findUserAuth(String email) {
-        // TODO: exception handling
+        logger.info("Searching for user with email: {}", email);
         UserModel userModel = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("E-mail inválido"));
-
+        logger.info("User found, returning auth object");
         return UserAuthResponse.builder()
                 .email(userModel.getEmail())
                 .encodedPassword(userModel.getPassword())

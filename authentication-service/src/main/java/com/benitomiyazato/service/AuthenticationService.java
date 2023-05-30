@@ -4,6 +4,8 @@ import com.benitomiyazato.dto.AuthenticationRequest;
 import com.benitomiyazato.dto.AuthenticationResponse;
 import com.benitomiyazato.dto.UserAuthResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,13 +18,15 @@ public class AuthenticationService {
     private final WebClient.Builder webClient;
     private final PasswordEncoder encoder;
     private final JwtService jwtService;
+    Logger logger = LogManager.getLogger(AuthenticationService.class);
+
 
     @Value("${jwt.expirationTimeInHours}")
     private int expirationTimeInHours;
 
 
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest) {
-        // TODO: fetch user data from user service
+        logger.info();
         UserAuthResponse userAuthResponse = webClient.build().get()
                 .uri("http://user-service/api/users/auth/" + authenticationRequest.getEmail())
                 .retrieve()
