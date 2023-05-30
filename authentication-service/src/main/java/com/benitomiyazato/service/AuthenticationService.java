@@ -26,22 +26,28 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest) {
-        logger.info();
+        logger.info("Fetching auth object for password and email verification");
         UserAuthResponse userAuthResponse = webClient.build().get()
                 .uri("http://user-service/api/users/auth/" + authenticationRequest.getEmail())
                 .retrieve()
                 .bodyToMono(UserAuthResponse.class).block();
 
-        if (userAuthResponse == null)
+        if (userAuthResponse == null) {
+            logger.error("User not found with email: {}", authenticationRequest.getEmail());
             throw new IllegalArgumentException("userAuthResponse null");
+        }
 
-        if(!encoder.matches(authenticationRequest.getPassword(), userAuthResponse.getEncodedPassword()))
-            throw new IllegalArgumentException("senha errada");
+        if(!encoder.matches(authenticationRequest.getPassword(), userAuthResponse.getEncodedPassword())) {
+            logger.error("Invalid username or password");
+            throw new IllegalArgumentException("Invalid username or password");
+        }
 
+        logger.info("User validated, generating token...");
         return new AuthenticationResponse(jwtService.generateToken(userAuthResponse, expirationTimeInHours));
     }
 
     public String validate(String token) {
+        logger.info("Validating token: {}", token);
         return jwtService.validate(token);
     }
 }
