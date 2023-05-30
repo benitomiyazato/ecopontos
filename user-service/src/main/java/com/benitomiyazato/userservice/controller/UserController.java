@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class UserController {
 
     Logger logger = LogManager.getLogger(UserController.class);
 
-    @PostMapping("/register")
+    @PostMapping("/registration")
     @ResponseStatus(HttpStatus.CREATED)
     public void saveUser(@RequestBody @Valid UserRequest userRequest) {
         logger.info("Hit Save user Endpoint");
@@ -32,6 +33,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{uuid}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(@PathVariable UUID uuid) {
         logger.info("Hit Delete user Endpoint with ID = {}", uuid);
         userService.deleteUser(uuid);
